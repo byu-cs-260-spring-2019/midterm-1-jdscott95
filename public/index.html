@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+  <title>CS 260 Midterm 1</title>
+</head>
+
+<body>
+  <h1 class = "center">OKBooks</h1>
+  <form class  = "center">
+    <input class = "center" id="bookInput" type="text"></input><br/>
+    <input class = "center" id="bookSubmit" type="submit" value="Submit"></input>
+  </form>
+  <div id="bookInfo" class = "center">
+  </div>
+  <!-- <div id="app">
+    <p class = "center" v-show="activeTodos.length === 0">You have no books yet. Go ahead and look one up!</p>
+    <form v-on:submit.prevent="addItem">
+     <input type="text" v-model="message">
+     <button type="submit">Search</button>
+   </form>
+   <div class="controls">
+     <button v-on:click="showAll()">Show All</button>
+     <button v-on:click="showActive()">Show Active</button>
+     <button v-on:click="showCompleted()">Show Completed</button>
+     <button v-on:click="deleteCompleted()">Delete Completed</button>
+   </div>
+    <ul>
+      <li v-for="item in filteredTodos" draggable="true" v-on:dragstart="dragItem(item)" v-on:dragover.prevent v-on:drop="dropItem(item)">
+        <input type="checkbox" v-model="item.completed"/>
+        <label v-bind:class="{ completed: item.completed }">{{ item.text }}</label>
+         <button v-on:click="deleteItem(item)" class="delete">X</button>
+        </li>
+      </ul>
+  </div> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.js"></script>
+  <script src="/script.js"></script>
+</body>
+
+</html>

@@ -9,36 +9,39 @@
 </head>
 
 <body>
-  <h1 class = "center">OKBooks</h1>
-  <form class  = "center">
-    <input class = "center" id="bookInput" type="text"></input><br/>
-    <input class = "center" id="bookSubmit" type="submit" value="Submit"></input>
-  </form>
-  <div id="bookInfo" class = "center">
+  <div id="app">
+    <div v-if="loading">
+        <p>Loading...</p>
+      </div>
+      <div class = "center" v-else>
+        <h1>OK Books</h1>
+        <p><b>Search for your favorite books</b></p>
+          <form v-on:submit.prevent="searchBook">
+          <input type="text" v-model="searchString">
+          <button type="submit">Search</button>
+          </form>
+      </div>
+      <div class = "center">
+        <button v-on:click="showAll()">Show All</button>
+        <button v-on:click="showActive()">Show Non-Favorites</button>
+        <button v-on:click="showCompleted()">Show Favorites</button>
+      </div>
+      <p class = "center">Check box if this is one of your favorites!</p>
+      <ul class = "center">
+        <li v-for="item in filteredTodos" draggable="true" v-on:dragstart="dragItem(item)" v-on:dragover.prevent v-on:drop="dropItem(item)">
+          <input type="checkbox" v-model="item.completed"/>
+          <img v-bind:src="image">
+          <label v-bind:class="{ completed: item.completed }">Title: {{ item.name }} <br/> Author: {{item.author}} <br/> Publish Date: {{item.year}}</label>
+          </li>
+        </ul>
   </div>
-  <!-- <div id="app">
-    <p class = "center" v-show="activeTodos.length === 0">You have no books yet. Go ahead and look one up!</p>
-    <form v-on:submit.prevent="addItem">
-     <input type="text" v-model="message">
-     <button type="submit">Search</button>
-   </form>
-   <div class="controls">
-     <button v-on:click="showAll()">Show All</button>
-     <button v-on:click="showActive()">Show Active</button>
-     <button v-on:click="showCompleted()">Show Completed</button>
-     <button v-on:click="deleteCompleted()">Delete Completed</button>
-   </div>
-    <ul>
-      <li v-for="item in filteredTodos" draggable="true" v-on:dragstart="dragItem(item)" v-on:dragover.prevent v-on:drop="dropItem(item)">
-        <input type="checkbox" v-model="item.completed"/>
-        <label v-bind:class="{ completed: item.completed }">{{ item.text }}</label>
-         <button v-on:click="deleteItem(item)" class="delete">X</button>
-        </li>
-      </ul>
-  </div> -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+
+  <script src="https://unpkg.com/vue-star-rating/dist/star-rating.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.js"></script>
-  <script src="/script.js"></script>
-</body>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/moment"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+  <script text="type/javascript" src="script.js">
+  </script>
 
 </html>

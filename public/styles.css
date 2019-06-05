@@ -43,7 +43,7 @@ label {
 }
 
 .completed {
-    text-decoration: line-through;
+    color: #EE7600;
 }
 
 /* Form */

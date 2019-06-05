@@ -1,105 +1,101 @@
-document.getElementById("bookSubmit").addEventListener("click", function(event) {
-  event.preventDefault();
-  const value = document.getElementById("bookInput").value;
-  if (value === "")
-    return;
-    const fixedValue = value.replace(/ /gi, "+");
-  console.log(fixedValue);
-  try{
-    const url = "https://openlibrary.org/search.json?q=" + fixedValue;
-    fetch(url)
-  .then(function(response) {
-  return response.json();
-}).then(function(json) {
-  console.log(json);
-let results = "";
-
-for (let i = 0; i < json.docs.length; i++)
-{
-results += '<h2>Book name: ' + json.docs[i].title_suggest + '</h2>';
-results += '<p> Author(s): ' + json.docs[i].author_name + '</p>';
-results += '<p> Publish date(s): ' + json.docs[i].publish_date;
-}
-/*esults += json.types[i].type.name
-if (i !== json.types.length - 1)
-results += ", "
-}
-results += '<p> Moves: ';""
-for (let i=0; i < json.moves.length; i++) {
-results += json.moves[i].move.name
-if (i !== json.moves.length - 1)
-results += ", "
-}
-results += '<p> Abilities: ';
-for (let i=0; i < json.abilities.length; i++) {
-results += json.abilities[i].ability.name
-if (i !== json.abilities.length - 1)
-results += ", "
-}
-for (let i=0; i < json.weather.length; i++) {
-results += '<img src="https://openweathermap.org/img/w/' + json.weather[i].icon + '.png"/ class = "center">';
-}
-results += '<h2>' + json.main.temp + " &deg;F</h2>"
-results += "<p>"
-for (let i=0; i < json.weather.length; i++) {
-results += json.weather[i].description
-if (i !== json.weather.length - 1)
-results += ", "
-}*/
- results += "</p>";
-document.getElementById("bookInfo").innerHTML = results;
-})
-}
-    catch(err){};
-});
-
-var app = new Vue({
+let app = new Vue({
   el: '#app',
   data: {
-    todos: [{
-      text: "make an app",
-      completed: false,
-    }, {
-      text: "declare victory",
-      completed: false,
-    }, {
-      text: "profit",
-      completed: false
-    }],
-    message: '',
+    books: [],
+    current: '',
+    searchString: '',
     show: 'all',
     drag: {},
+    loading: false,
   },
-
   computed: {
-      activeTodos() {
-        return this.todos.filter(item => {
-          return !item.completed;
-        });
-      },
-      filteredTodos() {
-      if (this.show === 'active')
-        return this.todos.filter(item => {
-         return !item.completed;
-        });
-      if (this.show === 'completed')
-        return this.todos.filter(item => {
-          return item.completed;
-         });
-      return this.todos;
+    activeTodos() {
+      return this.books.filter(item => {
+        return !item.completed;
+      });
     },
-    },
+    filteredTodos() {
+    if (this.show === 'active')
+      return this.books.filter(item => {
+       return !item.completed;
+      });
+    if (this.show === 'completed')
+      return this.books.filter(item => {
+        return item.completed;
+       });
+    return this.books;
+  },
+    typesList() {
+      var listString = '';
+      if (this.current.types[0] === undefined)
+      return listString;
+      else{
+        for (let i = 0; i < this.current.types[0].length; i++)
+      {
+        listString += this.current.types[i].type.name;
+        listString += ', '
 
+      }
+      console.log(this.current.types[0].length);
+      return string;
+    }
+  },
+  image() {
+    var imageString = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + this.current.id +'.png';
+    return imageString;
+  },
+   average() {
+     if (this.ratings[this.current.id] === undefined)
+    return 0;
+      var average = this.ratings[this.current.id].sum / this.ratings[this.current.id].total;
+     return average;
+   }
+ },
 
-methods: {
-   addItem() {
-     this.todos.push({text: this.message, completed:false});
-     this.message = '';
+ watch: {
+   number(value, oldvalue) {
+       this.max = 807;
+       this.xkcd();
+     }
    },
- deleteItem(item) {
-     var index = this.todos.indexOf(item);
-     if (index > -1)
-       this.todos.splice(index,1);
+  methods: {
+    async searchBook() {
+     try {
+       this.loading = true;
+       this.books = [];
+       this.searchString = this.searchString.replace(/ /gi, "+");
+       console.log(this.searchString);
+       const response = await axios.get('https://openlibrary.org/search.json?q=' + this.searchString);
+       this.current = response.data;
+       console.log(response.data);
+       this.loading = false;
+       this.searchString = '';
+       for(let i = 0; i < this.current.docs.length; i++)
+       {
+         var authorName = '';
+         if(this.current.docs[i].author_name === undefined){
+           authorName = '';
+        }
+         else {
+           authorName = this.current.docs[i].author_name[0];
+         }
+         var publishDate = '';
+         if(this.current.docs[i].publish_date === undefined){
+           publishDate = '';
+         }
+        else {
+          publishDate = this.current.docs[i].publish_date[0];
+        }
+
+          this.books.push({name: this.current.docs[i].title_suggest, author: authorName, year: publishDate,  completed:false});
+       }
+     } catch (error) {
+       console.log(error);
+     }
+   },
+   image() {
+     var imageString = 'book.jpg';
+     return imageString;
    },
    showAll() {
      this.show = 'all';
@@ -111,7 +107,7 @@ methods: {
      this.show = 'completed';
    },
    deleteCompleted() {
-     this.todos = this.todos.filter(item => {
+     this.books = this.books.filter(item => {
        return !item.completed;
      });
    },
@@ -119,10 +115,10 @@ methods: {
       this.drag = item;
     },
     dropItem(item) {
-      const indexItem = this.todos.indexOf(this.drag);
-      const indexTarget = this.todos.indexOf(item);
-      this.todos.splice(indexItem,1);
-      this.todos.splice(indexTarget,0,this.drag);
+      const indexItem = this.books.indexOf(this.drag);
+      const indexTarget = this.books.indexOf(item);
+      this.books.splice(indexItem,1);
+      this.books.splice(indexTarget,0,this.drag);
     },
- }
+  }
 });
